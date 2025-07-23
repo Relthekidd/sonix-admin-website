@@ -1,32 +1,14 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs'
-
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next()
-  const supabase = createMiddlewareSupabaseClient({ req, res })
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const res = NextResponse.next();
 
-  const isLoggedIn = !!session
-  const { pathname } = req.nextUrl
+  const supabase = createMiddlewareClient({
+    req,
+    res,
+    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  });
 
-  if (!isLoggedIn && pathname !== '/login') {
-    const redirectUrl = req.nextUrl.clone()
-    redirectUrl.pathname = '/login'
-    return NextResponse.redirect(redirectUrl)
-  }
+  await supabase.auth.getSession(); // optional: triggers cookie injection
 
-  if (isLoggedIn && pathname === '/login') {
-    const redirectUrl = req.nextUrl.clone()
-    redirectUrl.pathname = '/dashboard'
-    return NextResponse.redirect(redirectUrl)
-  }
-
-  return res
-}
-
-export const config = {
-  matcher: ['/((?!_next/|favicon.ico).*)'],
+  return res;
 }

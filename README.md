@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This admin dashboard is built with Next.js App Router, TailwindCSS and the Supabase JS client. It allows managing artists, users, tracks and more.
+
+Create an `.env.local` file based on `.env.example` with your Supabase project URL and anon key.
 
 ## Getting Started
 

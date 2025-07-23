@@ -1,7 +1,22 @@
 'use client'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabaseClient'
+import { useAuth } from '@/lib/auth'
 
 export default function DashboardLayout({children}:{children:React.ReactNode}){
+  const router = useRouter()
+  const { user, loading } = useAuth()
+
+  if (!loading && !user) {
+    router.replace('/login')
+  }
+
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    router.replace('/login')
+  }
+
   return (
     <div className="min-h-screen md:flex">
       <nav className="bg-gray-100 p-safe flex gap-4 md:flex-col md:w-48">
@@ -11,6 +26,8 @@ export default function DashboardLayout({children}:{children:React.ReactNode}){
         <Link href="/dashboard/notifications" className="hover:underline">Notifications</Link>
         <Link href="/dashboard/publishing" className="hover:underline">Publishing</Link>
         <Link href="/dashboard/merch" className="hover:underline">Merch</Link>
+        <Link href="/dashboard/tracks" className="hover:underline">Tracks</Link>
+        <button onClick={signOut} className="text-left hover:underline">Sign out</button>
       </nav>
       <main className="flex-1 p-safe">{children}</main>
     </div>

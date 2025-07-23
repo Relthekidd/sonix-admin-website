@@ -1,0 +1,5 @@
+.
+├── next-env.d.ts
+└── structure.txt
+
+1 directory, 2 files
